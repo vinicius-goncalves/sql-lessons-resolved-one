@@ -1,3 +1,6 @@
+/*
+You can find these lessons on the page: https://docente.ifrn.edu.br/nickersonferreira/disciplinas/programacao-com-acesso-a-banco-de-dados-3o-ano/lista-de-exercicios-sql/view
+*/
 CREATE TABLE IF NOT EXISTS precos(
  `ID_NF` TINYINT UNSIGNED NOT NULL,
  `ID_ITEM` TINYINT UNSIGNED NOT NULL, 
@@ -6,7 +9,7 @@ CREATE TABLE IF NOT EXISTS precos(
  `DESCONTO` TINYINT UNSIGNED DEFAULT 0);
  
  /* 
- Some 'precos' inserted here
+ Some 'precos' inserted here;
  */
 
 INSERT INTO precos VALUES
