@@ -114,6 +114,37 @@ o resultado da consulta por ID_NF.
 */
 
 SELECT * FROM precos;
-SELECT ID_NF, ROUND(VALOR_UNIT - (VALOR_UNIT * (DESCONTO/100)), 2) AS 'VALOR_VENDIDO', VALOR_UNIT * QUANTIDADE AS 'VALOR_TOTAL', COUNT(*) FROM precos GROUP BY ID_NF ORDER BY VALOR_TOTAL DESC; 
+SELECT 
+	ID_NF, 
+	SUM(ROUND(VALOR_UNIT - (VALOR_UNIT * (DESCONTO/100)), 2) * QUANTIDADE) AS 'VALOR_VENDIDO (com desconto)', 
+	SUM(VALOR_UNIT * QUANTIDADE) AS 'VALOR_TOTAL' FROM precos GROUP BY ID_NF ORDER BY VALOR_TOTAL DESC; 
+    
+/*
+Consulte o produto que mais vendeu no geral. As colunas presentes no resultado da 
+consulta são: COD_PROD, QUANTIDADE. Agrupe o resultado da consulta por 
+COD_PROD
+*/
 
+SELECT * FROM precos;
+SELECT COD_PROD, SUM(QUANTIDADE) AS 'MAIS_VENDIDO' FROM precos GROUP BY COD_PROD ORDER BY MAIS_VENDIDO DESC LIMIT 1;
 
+/*
+Consulte as NF que foram vendidas mais de 10 unidades de pelo menos um produto. 
+As colunas presentes no resultado da consulta são: ID_NF, COD_PROD, QUANTIDADE.
+Agrupe o resultado da consulta por ID_NF, COD_PROD.
+*/
+
+#?
+SELECT * FROM precos;
+SELECT ID_NF, COD_PROD, QUANTIDADE FROM precos WHERE QUANTIDADE > 10;
+
+/*
+Pesquise o valor total das NF, onde esse valor seja maior que 500, e ordene o 
+resultado do maior valor para o menor. As colunas presentes no resultado da consulta 
+são: ID_NF, VALOR_TOT. OBS: O VALOR_TOTAL é obtido pela fórmula: ∑ QUANTIDADE 
+* VALOR_UNIT. Agrupe o resultado da consulta por ID_NF
+*/
+
+SELECT * FROM precos;
+
+SELECT ID_NF, SUM(VALOR_UNIT * QUANTIDADE) AS 'VALOR_TOTAL' FROM precos GROUP BY ID_NF;
