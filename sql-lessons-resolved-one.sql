@@ -89,8 +89,8 @@ VALOR_UNIT. O VALOR_VENDIDO é igual a VALOR_UNIT -
 SELECT *, VALOR_UNIT * QUANTIDADE AS `[$] Total vendidos` FROM precos;
 
 SELECT *, 
-	ROUND(((VALOR_UNIT - VALOR_UNIT * (VALOR_UNIT/100))) * QUANTIDADE, 2) 
-		AS '[$] Total vendidos com desconto', (VALOR_UNIT * QUANTIDADE) `[X] Total vendidos sem desconto` FROM precos;
+	ROUND(((VALOR_UNIT - VALOR_UNIT * (DESCONTO/100))) * QUANTIDADE, 2) 
+		AS '[$] Total vendidos com desconto', (VALOR_UNIT * QUANTIDADE) AS '[X] Total vendidos sem desconto' FROM precos;
 
 /*
 Pesquise o valor total das NF e ordene o resultado do maior valor para o menor. As 
@@ -103,13 +103,17 @@ resultado da consulta por ID_NF
 
 SELECT * FROM precos;
 
-
 SELECT ID_NF, COUNT(*), VALOR_UNIT * QUANTIDADE AS VALOR_TOTAL FROM precos GROUP BY ID_NF ORDER BY VALOR_TOTAL DESC;
 
+/*
+Pesquise o valor vendido das NF e ordene o resultado do maior valor para o menor. As 
+colunas presentes no resultado da consulta são: ID_NF, VALOR_VENDIDO. OBS: O 
+VALOR_TOTAL é obtido pela fórmula: ∑ QUANTIDADE * VALOR_UNIT. O 
+VALOR_VENDIDO é igual a ∑ VALOR_UNIT - (VALOR_UNIT*(DESCONTO/100)). Agrupe 
+o resultado da consulta por ID_NF.
+*/
 
-
-
-
-
+SELECT * FROM precos;
+SELECT ID_NF, ROUND(VALOR_UNIT - (VALOR_UNIT * (DESCONTO/100)), 2) AS 'VALOR_VENDIDO', VALOR_UNIT * QUANTIDADE AS 'VALOR_TOTAL', COUNT(*) FROM precos GROUP BY ID_NF ORDER BY VALOR_TOTAL DESC; 
 
 
