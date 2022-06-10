@@ -147,4 +147,90 @@ são: ID_NF, VALOR_TOT. OBS: O VALOR_TOTAL é obtido pela fórmula: ∑ QUANTIDA
 
 SELECT * FROM precos;
 
-SELECT ID_NF, SUM(VALOR_UNIT * QUANTIDADE) AS 'VALOR_TOTAL' FROM precos GROUP BY ID_NF;
+SELECT ID_NF, SUM(VALOR_UNIT * QUANTIDADE) AS 'VALOR_TOTAL' FROM precos GROUP BY ID_NF HAVING VALOR_TOTAL > 500;
+
+/*
+Qual o valor médio dos descontos dados por produto. As colunas presentes no 
+resultado da consulta são: COD_PROD, MEDIA. Agrupe o resultado da consulta por 
+COD_PROD.
+*/
+
+SELECT * FROM precos;
+SELECT ID_NF, SUM(VALOR_UNIT * QUANTIDADE) FROM precos GROUP BY ID_NF;
+#?
+SELECT COD_PROD, ROUND(AVG((VALOR_UNIT - VALOR_UNIT * (DESCONTO / 100))), 2) AS 'MEDIA' FROM precos GROUP BY COD_PROD;
+
+/*
+Quais as NF que possuem mais de 3 itens vendidos. As colunas presentes no resultado 
+da consulta são: ID_NF, QTD_ITENS. OBS:: NÃO ESTÁ RELACIONADO A QUANTIDADE 
+VENDIDA DO ITEM E SIM A QUANTIDADE DE ITENS POR NOTA FISCAL. Agrupe o 
+resultado da consulta por ID_NF.
+*/
+
+SELECT * FROM precos;
+#?
+SELECT ID_NF, ID_ITEM FROM precos WHERE ID_ITEM > 3 GROUP BY ID_NF;
+
+#--------------------------------------
+
+/*
+Crie uma base de dados Universidade com as tabelas a seguir:
+Alunos (MAT, nome, endereço, cidade)
+Disciplinas (COD_DISC, nome_disc, carga_hor)
+Professores (COD_PROF, nome, endereço, cidade)
+Turma (COD_DISC, COD_TURMA, COD_PROF, ANO, horário)
+ COD_DISC referencia Disciplinas
+ COD_PROF referencia Professores
+Histórico (MAT, COD_DISC, COD_TURMA, COD_PROF, ANO, frequência, nota)
+ MAT referencia Alunos
+ COD_DISC, COD_TURMA, COD_PROF, ANO referencia Turma
+*/
+CREATE TABLE IF NOT EXISTS alunos(`MAT` INT UNIQUE KEY, `nome` VARCHAR(255), enedereço VARCHAR(255), cidade VARCHAR(255));
+CREATE TABLE IF NOT EXISTS disciplinas(`COD_DISC` INT UNIQUE KEY, `nome_disc` VARCHAR(255), `carga_hor` VARCHAR(255));
+CREATE TABLE IF NOT EXISTS professores(`COD_PROF` INT UNIQUE KEY, `nome` VARCHAR(255), `endereço` VARCHAR(255), `cidade` VARCHAR(255));
+CREATE TABLE IF NOT EXISTS turma(`COD_DISC` VARCHAR(255), `COD_TURMA` INT UNIQUE KEY, `COD_PROF` INT UNIQUE KEY, horario DATE);
+CREATE TABLE IF NOT EXISTS historico(`MAT` INT UNIQUE KEY, `COD_DISC` INT UNIQUE KEY, COD_TURMA INT UNIQUE KEY, COD_PROF INT UNIQUE KEY, ANO DATE);
+
+INSERT INTO alunos VALUES (2015010101, 'JOSE DE ALENCAR', 'RUA DAS ALMAS', 'NATAL'),
+(2015010102, 'JOÃO JOSÉ', 'AVENIDA RUY CARNEIRO', 'JOÃO PESSOA'),
+(2015010103, 'MARIA JOAQUINA', 'RUA CARROSSEL', 'RECIFE'),
+(2015010104, 'MARIA DAS DORES', 'RUA DAS LADEIRAS', 'FORTALEZA'),
+(2015010105, 'JOSUÉ CLAUDINO DOS SANTOS', 'CENTRO', 'NATAL'),
+(2015010106, 'JOSUÉLISSON CLAUDINO DOS SANTOS', 'CENTRO', 'NATAL');
+
+ALTER TABLE disciplinas MODIFY COLUMN `COD_DISC` VARCHAR(255);
+
+INSERT INTO disciplinas VALUES ('BD', 'BANCO DE DADOS', 100),
+('POO', 'PROGRAMAÇÃO COM ACESSO A BANCO DE DADOS', 100),
+('WEB', 'AUTORIA WEB', 50),
+('ENG', 'ENGENHARIA DE SOFTWARE', 80);
+
+INSERT INTO professores VALUES (212131, 'NICKERSON FERREIRA', 'RUA MANAÍRA', 'JOÃO PESSOA'),
+(122135, 'ADORILSON BEZERRA', 'AVENIDA SALGADO FILHO', 'NATAL'),
+(192011, 'DIEGO OLIVEIRA', 'AVENIDA ROBERTO FREIRE', 'NATAL');
+
+ALTER TABLE turma MODIFY COLUMN horario VARCHAR(255);
+
+ALTER TABLE turma ADD COLUMN ano TINYINT UNSIGNED;
+ALTER TABLE turma MODIFY COLUMN COD_TURMA VARCHAR(255);
+ALTER TABLE turma DROP INDEX COD_TURMA;
+ALTER TABLE turma DROP INDEX COD_PROF;
+SHOW INDEX FROM turma;
+
+DESCRIBE turma;
+
+INSERT INTO turma VALUES 
+('BD', 2, 212131, 2015, '13H-14H'),
+('POO', 1, 192011, 2015, '08H-09H'),
+('WEB', 1, 192011, 2015, '07H-08H'),
+('ENG', 1, 122135, 2015, '10H-11H');
+
+/*
+a) Encontre a MAT dos alunos com nota em BD em 2015 menor que 5 (obs: BD = 
+código da disciplinas).
+b) Encontre a MAT e calcule a média das notas dos alunos na disciplina de POO 
+em 2015.
+c) Encontre a MAT e calcule a média das notas dos alunos na disciplina de POO 
+em 2015 e que esta média seja superior a 6.
+d) Encontre quantos alunos não são de Natal
+*/
